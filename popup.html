@@ -1,56 +1,410 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>STEPfwd Paste</title>
+
     <style>
+        :root {
+            --cmu-red: #C41230;
+            --cmu-dark-red: #A00F27;
+            --text: #242424;
+            --muted: #666666;
+            --border: #D4D4D4;
+            --surface: #F5F5F5;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            width: 320px;
-            padding: 15px;
-            font-family: Arial, sans-serif;
+            width: 360px;
+            margin: 0;
+            background: #FFFFFF;
+            color: var(--text);
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 13px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Header */
+
+        header {
+            background: var(--cmu-red);
+            color: white;
+            padding: 22px 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .header-icon {
+            width: 36px;
+            height: 36px;
+            flex-shrink: 0;
+        }
+
+        h1 {
+            margin: 0 0 5px;
+            font-size: 23px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 1.3px;
+            text-transform: uppercase;
+            color: #F5CBD3;
+        }
+
+        /* Main content */
+
+        main {
+            padding: 20px;
+        }
+
+        .description {
+            margin: 0 0 20px;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .field-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 12px;
+            font-weight: 700;
         }
 
         textarea {
+            display: block;
             width: 100%;
-            height: 180px;
-            box-sizing: border-box;
+            height: 170px;
+            min-height: 100px;
+            max-height: 300px;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: #FFFFFF;
+            color: var(--text);
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 12px;
+            line-height: 1.6;
             resize: vertical;
+            transition: border-color 0.15s,
+                        box-shadow 0.15s;
         }
+
+        textarea::placeholder {
+            color: #999999;
+        }
+
+        textarea:focus,
+        input:focus {
+            outline: none;
+            border-color: var(--cmu-red);
+            box-shadow: 0 0 0 3px rgba(196, 18, 48, 0.10);
+        }
+
+        .helper-text {
+            margin: 7px 0 0;
+            color: var(--muted);
+            font-size: 10px;
+            line-height: 1.5;
+        }
+
+        /* Transfer settings */
+
+        .settings {
+            margin-top: 18px;
+            padding: 13px;
+            background: var(--surface);
+            border: 1px solid #E8E8E8;
+            border-radius: 6px;
+        }
+
+        .settings-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .settings-label {
+            font-size: 12px;
+            font-weight: 600;
+            flex: 1;
+        }
+
+        .settings-icon {
+            width: 17px;
+            height: 17px;
+            color: var(--muted);
+        }
+
+        input[type="number"] {
+            width: 62px;
+            padding: 7px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: white;
+            color: var(--text);
+            font-family: inherit;
+            text-align: center;
+        }
+
+        .unit {
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        /* Transfer button */
 
         button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
             width: 100%;
-            padding: 10px;
-            margin-top: 10px;
-            background: #2563eb;
+            margin-top: 18px;
+            padding: 13px;
+            background: var(--cmu-red);
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 700;
             cursor: pointer;
+            transition: background 0.15s,
+                        transform 0.15s;
         }
 
-        input {
-            width: 70px;
-            margin-top: 10px;
+        button:hover {
+            background: var(--cmu-dark-red);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        button:focus-visible {
+            outline: 2px solid var(--cmu-red);
+            outline-offset: 3px;
+        }
+
+        button svg {
+            width: 17px;
+            height: 17px;
+        }
+
+        /* Status messages */
+
+        #status {
+            margin: 12px 0 0;
+            padding: 10px;
+            background: #FFF0F2;
+            border-left: 3px solid var(--cmu-red);
+            border-radius: 3px;
+            color: var(--cmu-dark-red);
+            font-size: 11px;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+
+        #status:empty {
+            display: none;
+        }
+
+        /* Privacy indicator */
+
+        .privacy {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 15px;
+            color: var(--muted);
+            font-size: 10px;
+        }
+
+        .privacy svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Footer */
+
+        footer {
+            padding: 13px 20px;
+            border-top: 1px solid #E5E5E5;
+            background: #F8F8F8;
+        }
+
+        .footer-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .footer-brand {
+            color: var(--cmu-red);
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .version {
+            color: var(--muted);
+            font-size: 10px;
+        }
+
+        .affiliation {
+            margin: 6px 0 0;
+            color: var(--muted);
+            font-size: 9px;
+            line-height: 1.5;
         }
     </style>
 </head>
+
 <body>
-    <h2>STEPfwd Paste</h2>
 
-    <textarea id="text"
-        placeholder="Paste your text here..."
-        autofocus></textarea>
+    <header>
+        <svg class="header-icon"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="1.7"
+             stroke-linecap="round"
+             stroke-linejoin="round"
+             aria-hidden="true">
 
-    <label>
-        Keystroke delay (ms):
-        <input id="delay" type="number"
-               value="30" min="10" max="500">
-    </label>
+            <rect x="5" y="4" width="14" height="17" rx="2"/>
+            <rect x="9" y="2" width="6" height="4" rx="1"
+                  fill="#C41230"/>
+            <path d="M9 11h6M9 15h6"/>
+        </svg>
 
-    <button id="send">Send Text to VM</button>
+        <div>
+            <h1>STEPfwd Paste</h1>
+            <div class="subtitle">
+                Virtual Machine Text Transfer
+            </div>
+        </div>
+    </header>
 
-    <p id="status"></p>
+    <main>
+
+        <p class="description">
+            Transfer plain text from your clipboard directly
+            into your STEPfwd virtual machine.
+        </p>
+
+        <label class="field-label" for="text">
+            Text to transfer
+        </label>
+
+        <textarea
+            id="text"
+            placeholder="Paste your text here..."
+            spellcheck="false"
+            autofocus></textarea>
+
+        <p class="helper-text">
+            Supports plain ASCII text and line breaks.
+        </p>
+
+        <section class="settings">
+            <div class="settings-row">
+
+                <svg class="settings-icon"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="1.8"
+                     stroke-linecap="round"
+                     aria-hidden="true">
+
+                    <circle cx="12" cy="13" r="8"/>
+                    <path d="M12 9v4l3 2M9 2h6M12 2v3"/>
+                </svg>
+
+                <label class="settings-label" for="delay">
+                    Keystroke delay
+                </label>
+
+                <input
+                    id="delay"
+                    type="number"
+                    value="30"
+                    min="10"
+                    max="500">
+
+                <span class="unit">ms</span>
+            </div>
+
+            <p class="helper-text">
+                Increase the delay if characters are skipped.
+            </p>
+        </section>
+
+        <button id="send" type="button">
+
+            <svg viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="1.8"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 aria-hidden="true">
+
+                <path d="M22 2 7 17"/>
+                <path d="m22 2-9 20-4-9-9-4 22-7Z"/>
+            </svg>
+
+            Send Text to VM
+
+        </button>
+
+        <p id="status" role="status" aria-live="polite"></p>
+
+        <div class="privacy">
+
+            <svg viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="1.8"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 aria-hidden="true">
+
+                <path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/>
+                <path d="m9 12 2 2 4-4"/>
+            </svg>
+
+            No external data transmission
+
+        </div>
+
+    </main>
+
+    <footer>
+        <div class="footer-row">
+            <span class="footer-brand">STEPfwd Paste</span>
+            <span class="version">v1.0.0</span>
+        </div>
+
+        <p class="affiliation">
+            Independent student project · Carnegie Mellon University
+        </p>
+    </footer>
 
     <script src="popup.js"></script>
+
 </body>
 </html>
